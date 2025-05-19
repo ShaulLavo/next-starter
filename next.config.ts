@@ -1,7 +1,25 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
+	/* config options here */
+	async headers() {
+		return [
+			{
+				// Apply these headers to all routes in your application.
+				source: '/(.*)',
+				headers: [
+					{
+						key: 'Cross-Origin-Opener-Policy',
+						value: 'same-origin'
+					},
+					{
+						key: 'Cross-Origin-Embedder-Policy',
+						value: 'require-corp'
+					}
+				]
+			}
+		]
+	}
+}
 
-export default nextConfig;
+export default nextConfig
