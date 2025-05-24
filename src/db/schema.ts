@@ -14,3 +14,5 @@ export const cacheTable = sqliteTable('cache', {
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`)
 })
+
+console.log(cacheTable.getSQL())
