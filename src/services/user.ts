@@ -1,5 +1,5 @@
 import { User } from '@/server/routes/userRouter'
-import { hc } from '@/utils/honoClient'
+import { hc } from '@/lib/honoClient'
 
 export async function getUser(id: number) {
 	const res = await hc.users[':id'].$get({

@@ -1,4 +1,4 @@
-import { hc } from '@/utils/honoClient'
+import { hc } from '@/lib/honoClient'
 console.log(process.env.NEXT_PUBLIC_BASE_URL!)
 export async function Hello() {
 	const res = await hc.users.hello.$get()

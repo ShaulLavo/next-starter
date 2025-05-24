@@ -2,13 +2,12 @@
 
 'use client'
 
-import { createSQLPersister } from '@/utils/queryPresister'
 // We can not useState or useRef in a server component, which is why we are
 // extracting this part out into it's own file with 'use client' on top
+import { sqlocalStorage } from '@/lib/sqlocalStorage'
 import { QueryClient } from '@tanstack/react-query'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
-import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
 
 import { PropsWithChildren } from 'react'
 
@@ -40,19 +39,25 @@ function getQueryClient() {
 	}
 }
 
+// const syncPersister = createSyncStoragePersister({
+// 	storage: typeof window !== 'undefined' ? window.localStorage : undefined
+// })
+
+const asyncPersister = createAsyncStoragePersister({
+	storage: sqlocalStorage
+})
+
 export default function QueryProvider({ children }: PropsWithChildren) {
 	// NOTE: Avoid useState when initializing the query client if you don't
 	//       have a suspense boundary between this and the code that may
 	//       suspend because React will throw away the client on the initial
 	//       render if it suspends and there is no boundary
 	const queryClient = getQueryClient()
-	const persister = createSyncStoragePersister({
-		storage: typeof window !== 'undefined' ? window.localStorage : undefined
-	})
+
 	return (
 		<PersistQueryClientProvider
 			client={queryClient}
-			persistOptions={{ persister }}
+			persistOptions={{ persister: asyncPersister }}
 		>
 			{children}
 		</PersistQueryClientProvider>
