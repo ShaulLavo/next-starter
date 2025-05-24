@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@hono/zod-validator": "^0.5.0",
+    "@monaco-editor/react": "next",
     "@radix-ui/react-menubar": "^1.1.15",
     "@radix-ui/react-navigation-menu": "^1.2.13",
     "@radix-ui/react-slot": "^1.2.3",

@@ -6,6 +6,12 @@ import { useQuery } from '@tanstack/react-query'
 import { localDb } from '@/db/localDb'
 import { cacheTable } from '@/db/schema'
 import { CodeBlock } from './ui/code-block'
+import Editor, {
+	DiffEditor,
+	useMonaco,
+	loader,
+	OnMount
+} from '@monaco-editor/react'
 
 async function getCache() {
 	const result = await localDb
@@ -17,6 +23,13 @@ async function getCache() {
 		.from(cacheTable)
 		.orderBy(cacheTable.key)
 	return result
+}
+const handleEditorDidMount: OnMount = editor => {
+	// if you need to tweak options post-mount
+	editor.updateOptions({
+		minimap: { enabled: false },
+		lineNumbers: 'off'
+	})
 }
 
 export function HelloClient(props: { users?: User[] }) {
@@ -45,16 +58,18 @@ export function HelloClient(props: { users?: User[] }) {
 			<h1>client component:</h1>
 			<div>
 				pre fetched:
-				<div className="font-bold tracking-tighter ">
+				<div className="font-bold tracking-tighter w-full">
 					{!userData ? (
 						'Loading...'
 					) : (
-						<CodeBlock
-							code={JSON.stringify(userData, null, 2)}
-							language="json"
-							filename="users"
-							lightTheme="github-light"
-							darkTheme="github-dark"
+						<Editor
+							defaultLanguage="json"
+							defaultValue={JSON.stringify(userData, null, 2)}
+							height="10vh"
+							options={{
+								minimap: { enabled: false },
+								lineNumbers: 'off'
+							}}
 						/>
 					)}
 				</div>
@@ -68,7 +83,7 @@ export function HelloClient(props: { users?: User[] }) {
 			<div>
 				cache data (from the client cache via - SQL light on OPFS):
 				<div className="font-bold tracking-tighter ">
-					{!cacheData ? (
+					{!cacheData?.[0] ? (
 						'Loading...'
 					) : (
 						<CodeBlock
